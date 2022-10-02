@@ -7,7 +7,7 @@
 
 #ifndef KEYWORDS_H
 
-#include <strings>
+#include <string>
 using namespace std;
 
 const string newgraph = "newgraph\n";

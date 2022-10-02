@@ -4,8 +4,10 @@
 */
 
 #include <iostream>
-#include <strings>
+#include <string>
 #include <vector>
+#include "keywords.h"
+
 using namespace std;
 
 /*
