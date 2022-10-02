@@ -4,6 +4,8 @@
 */
 
 #include <iostream>
+#include <strings>
+#include <vector>
 using namespace std;
 
 /*
@@ -17,4 +19,11 @@ class QR {
 };
 */
 
+int main(int args, char *argv[]) {
+
+   string dummy = "dummy\n";
+   cout << dummy;
+
+   return 0;
+}
 
