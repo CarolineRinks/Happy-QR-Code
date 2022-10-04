@@ -26,7 +26,7 @@ class QR {
 	public:
 		QR() { width = 0; height = 0; max_color = 0; }
 		void read(const char *);
-		void write_jgraph(QR &, char *);
+		void write_jgraph(char *);
 
 	private:
 		int width;
@@ -60,6 +60,8 @@ void QR::read(const char *fname) {
 	char c;
 	int count = 0;
 
+	fin.get(c);		// discard extra byte at beginning of qr code
+
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			count += 1;
@@ -72,13 +74,29 @@ void QR::read(const char *fname) {
 			pix.B = (unsigned) c;
 
 			grid[count] = pix;
+			
+			/* Each pixel is 2 RGBs, so read 2nd time */
+			fin.get(c);
+			fin.get(c);
+			fin.get(c);
 		}
 	}
+
+	//Check how long the black square is (how many pixels)
+	/*Pixel p = grid[0];
+	for (int i = 1; i < height*width; i++) {
+		if (grid[i].R != p.R)  {
+			cerr << "pixel " << i << " marks 1st white pixel\n";
+			exit(EXIT_FAILURE);
+		}
+	}
+	*/
 	
-	if (count != width*height) {
+	if (count != width*height || (!fin.eof())) {
 		cerr << count << " / " << width*height << " pixels read.\n";
 		exit(EXIT_FAILURE);
 	}
+
 /*
 	for (int i = 0; i < width*height; i++) {
 		printf("grid[%d] = %x %x %x\n", i, grid[i].R, grid[i].G, grid[i].B);
@@ -86,7 +104,7 @@ void QR::read(const char *fname) {
 */
 }
 
-void QR::write_jgraph(QR &qr_code, char * fname) {
+void QR::write_jgraph(char * fname) {
 	
 	Pixel pix;
 	float r, g, b;
@@ -98,20 +116,20 @@ void QR::write_jgraph(QR &qr_code, char * fname) {
 	printf("xaxis nodraw\nyaxis nodraw\n");		// remove axes from jgraph
 
 	/* Initialize y values for the corners of the starting pixel */
-	ytl = qr_code.height;
-	ytr = qr_code.height;
-	ybl = ytl-1;	// 1 below
-	ybr = ytr-1;	// 1 below
+	ytl = height;
+	ytr = height;
+	ybl = height-1;	// 1 below
+	ybr = height-1;	// 1 below
 
-	for (int row = 0; row < qr_code.height; row++) {
+	for (int row = 0; row < height; row++) {
 		/* For each row, draw the leftmost pixel 1st */
 		xtl = 0;
 		xbl = 0;
 		xtr = 1;
 		xbr = 1;
-		for (int col = 0; col < qr_code.width; col++) {
+		for (int col = 0; col < width; col++) {
 			/* Get pixel color value */
-			pix = qr_code.grid[count];
+			pix = grid[count];
 			r = pix.R / 255.0;
 			g = pix.G / 255.0;
 			b = pix.B / 255.0;
@@ -175,7 +193,7 @@ int main(int argc, char *argv[]) {
 	
 	qr_code.read(fname);
 	make_fun_qr(qr_code);
-	qr_code.write_jgraph(qr_code, fname);
+	qr_code.write_jgraph(fname);
 
 	return 0;
 }
