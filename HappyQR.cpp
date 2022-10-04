@@ -61,6 +61,8 @@ void QR::read(const char *fname) {
 	int count = 0;
 
 	fin.get(c);		// discard extra byte at beginning of qr code
+	fin.get(c);
+	fin.get(c);
 
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
@@ -81,27 +83,10 @@ void QR::read(const char *fname) {
 			fin.get(c);
 		}
 	}
-
-	//Check how long the black square is (how many pixels)
-	/*Pixel p = grid[0];
-	for (int i = 1; i < height*width; i++) {
-		if (grid[i].R != p.R)  {
-			cerr << "pixel " << i << " marks 1st white pixel\n";
-			exit(EXIT_FAILURE);
-		}
-	}
-	*/
-	
 	if (count != width*height || (!fin.eof())) {
-		cerr << count << " / " << width*height << " pixels read.\n";
+		cerr << "Reading error: " << count << " / " << width*height << " pixels read.\nfin.eof() -> " << fin.eof() << '\n';
 		exit(EXIT_FAILURE);
 	}
-
-/*
-	for (int i = 0; i < width*height; i++) {
-		printf("grid[%d] = %x %x %x\n", i, grid[i].R, grid[i].G, grid[i].B);
-	}
-*/
 }
 
 void QR::write_jgraph(char * fname) {
@@ -110,7 +95,7 @@ void QR::write_jgraph(char * fname) {
 	float r, g, b;
 	int xtl, xtr, xbl, xbr;		// x values for each of the corners of square
 	int ytl, ytr, ybl, ybr;		// y values for each of the corners of sqaure
-	int count = 0;
+	int count = 1;
 
 	printf(newgraph.c_str());
 	printf("xaxis nodraw\nyaxis nodraw\n");		// remove axes from jgraph
