@@ -216,9 +216,9 @@ void QR::changeColors() {
 	vector<Pixel> colors;
 
 	/* Ask for user input */
-	cout << "CHOOSE YOUR COLORS!\n. . . Specify up to 10 colors each inputed as a set of RGB values.\n. . . For example, input '255 0 0' for the color red.\n. . . When you are finished, input 'done'.\n\n";
+	cout << "CHOOSE YOUR COLORS!\n. . . Specify up to 5 colors each inputed as a set of RGB values.\n. . . For example, input '255 0 0' for the color red.\n. . . When you are finished, input 'done'.\n\n";
 	
-	while (colors.size() <= 10) {
+	while (colors.size() <= 5) {
 		cout << ":> ";
 
 		/* Stop reading when 10 colors have been input or user inputs 'done' */
@@ -256,8 +256,8 @@ void QR::changeColors() {
 		colors.push_back(pix);
 	}
 
-	cin.clear();
-	fflush(stdin);
+	//cin.clear();
+	//fflush(stdin);
 
 	if (colors.size() != 0) {
 
@@ -298,10 +298,9 @@ void QR::changeColors() {
 		/* Top Right square (Outer) */
 		pix = colors.at(distr(generator));
 		set_squares(pix, square_sz, width-square_sz+1, width, width*square_sz-square_sz+1, width*square_sz);
-
 		/* Bottom Left square (Outer) */
 		pix = colors.at(distr(generator));
-		set_squares(pix, square_sz, width*square_sz*2+1, width*square_sz*2+square_sz, height*width-width+1, height*width-width+square_sz);
+		set_squares(pix, square_sz, width*(height-square_sz)+1, width*(height-square_sz)+square_sz, height*width-width+1, height*width-width+square_sz);
 
 		int itl, itr, mid;
 
@@ -324,7 +323,7 @@ void QR::changeColors() {
         grid[mid].B = pix.B;
 
 		/* Bottom left square (inner) */
-		itl = (width*square_sz*2+1) + (width+1)*2;
+		itl = (width*(height-square_sz)+1) + (width+1)*2;
         pix = colors.at(distr(generator));
         set_squares(pix, square_sz-4, itl, itl+2, itl+width+width, itl+width+width+2);
         mid = itl + width + 1;
@@ -398,7 +397,11 @@ string QR::insertImages() {
 	
 	for (int i = 0; i < 12; i++) {
 		num = distr(generator);
-		if (grid[num].special == true) {
+		if (grid[num].R == 0xff) {
+			i -= 1;			// skip white pixels
+			continue;
+		}
+		else if (grid[num].special == true) {
 			// If pixel is one of the corner squares, generate a different pixel
 			i -= 1;
 			continue;
