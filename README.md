@@ -8,7 +8,9 @@ Setup the repository
 
 Using HappyQR
 -------------
-You can run the script happyQrDemo.sh to automatically generate 3 Happy QR codes using preselected options.
+You can run the script happyQrDemo.sh to automatically generate 3 Happy QR codes using preselected options:
+      
+      sh happyQrDemo.sh
 
 To customize a QR code yourself:
 
