@@ -29,3 +29,6 @@ Tips
 ----
 - The program has a random element to it, so even if you input the same customization options, you will get a different QR code.
 - Avoid inputting really light colors to make sure that your QR code is readable. The best colors to input are those that clearly contrast with the white background.
+
+
+The QR code generator program was pulled from the project https://github.com/nayuki/QR-Code-generator. Check it out!
